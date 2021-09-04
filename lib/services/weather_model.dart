@@ -52,7 +52,6 @@ class WeatherModel{
    }
 
 
-
    String getWeatherIcon(int condition) {
      if (condition < 300) {
        return '🌩';
