@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:weather_app/screens/loading_screen.dart';
 import 'package:weather_app/services/weather_model.dart';
 import 'package:weather_app/widgets/tiles_widget.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late int temperature;
   String weatherIcon = '';
   String place = '';
+  bool _showLoading = false;
 
   void updateUI(var weather) {
     setState(() {
@@ -36,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
       weatherIcon = WeatherModel().getWeatherIcon(temperature);
       currentWeather = weather['weather'][0]['main'];
       place = weather['name'];
+      _showLoading=false;
     });
   }
 
@@ -63,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text("Flutter Weather App"),
-        backgroundColor: Colors.indigo,
+        backgroundColor: Colors.blueGrey,
       ),
       body: Stack(
         children: [
@@ -110,13 +113,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(fontSize: 17, color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
-                  IconButton(
+                  _showLoading?spin:IconButton(
                     visualDensity: VisualDensity.comfortable,
                     splashRadius: 25,
                     splashColor: Colors.white,
                     iconSize: 25,
                     hoverColor: Colors.white,
                       onPressed: () async {
+                      setState(() {
+                        _showLoading=true;
+                      });
                         var weatherData =
                             await WeatherModel().getCurrentWeather();
                         updateUI(weatherData);
